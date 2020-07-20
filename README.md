@@ -1,5 +1,5 @@
 # 1000-Pushups
-A React Native mobile app that offers a unique way to keep track of push-ups.
+A React Native mobile app that offers a fun way to keep track of push-ups.
 
 ### Count Push-ups With Your Nose
 - Place the device directly below your nose while in the push-up position
