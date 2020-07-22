@@ -17,6 +17,6 @@ A React Native mobile app that offers a fun way to keep track of push-ups.
 - Tap the 'water drop' button to pause and cover the timer (can be used to clean the screen without accidentally pressing buttons)
 - Press and hold the "RESUME" button to start the timer again
 
-![](counter.gif) ![](pause.gif) 
+![](counter.gif) ![](pause.gif) ![](logo_small.png) 
 ![](pushup.png)
 (Image source: https://www.vecteezy.com/vector-art/162096-man-doing-push-up-vector-illustration)
