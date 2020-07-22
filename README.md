@@ -13,7 +13,7 @@ A React Native mobile app that offers a fun way to keep track of push-ups.
 - The app's built-in timer allows you to set time-limits and track how long it takes you to complete your push-ups
 
 ### Pausing
-- Tap the 'water drop' button to pause the timer and reveal a blank screen (this is useful for cleaning the screen without accidentally pressing buttons)
+- Tap the 'water drop' button to pause and cover the timer (can be useful for cleaning the screen without accidentally pressing buttons)
 - Press and hold the "RESUME" button to start the timer again
 
 ![](counter.gif) ![](pause.gif) 
