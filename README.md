@@ -7,13 +7,14 @@ A React Native mobile app that offers a fun way to keep track of push-ups.
 
 ### Custom Incrementing
 - Want to count in sets instead? Simply use the custom incrementor at the bottom
+- The custom incrementor can be set to negative numbers to remove reps
 
 ### Setting Personal Goals
 - The app allows you to set a custom target number of repetitions and tracks your progress as you perform push-ups
 - The app's built-in timer allows you to set time-limits and track how long it takes you to complete your push-ups
 
 ### Pausing
-- Tap the 'water drop' button to pause and cover the timer (can be useful for cleaning the screen without accidentally pressing buttons)
+- Tap the 'water drop' button to pause and cover the timer (can be used to clean the screen without accidentally pressing buttons)
 - Press and hold the "RESUME" button to start the timer again
 
 ![](counter.gif) ![](pause.gif) 
