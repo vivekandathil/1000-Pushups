@@ -15,24 +15,18 @@ import {
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { ListItem, CheckBox, Divider, Overlay } from "react-native-elements";
 import TouchableScale from "react-native-touchable-scale";
-
 import NumericInput from "react-native-numeric-input";
-
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
 import * as Speech from "expo-speech";
-
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-
 import { Ionicons } from "@expo/vector-icons";
-
 import NumberPlease from "react-native-number-please";
-
 import { LinearGradient } from "expo-linear-gradient";
-
 import { CountDown } from "react-native-customizable-countdown";
+import NumericTimer from "./components/NumericTimer.js";
+import { Accelerometer } from 'expo-sensors';
 
 const list = [
   {
@@ -58,7 +52,11 @@ const list = [
 
 let speechChecked = false;
 let goalPushups = 100;
-let countdownDuration = 0;
+let countdownDuration = [
+  { id: "hour", value: 0 },
+  { id: "minute", value: 10 },
+  { id: "second", value: 0 },
+];
 
 console.disableYellowBox = true;
 
@@ -204,8 +202,10 @@ function HomeScreen({ navigation }) {
           )}
         </AnimatedCircularProgress>
       </TouchableScale>
-
-      <Text style={[styles.circleText, { fontSize: 20, marginTop: 30 }]}>
+      <NumericTimer countdown={countdownDuration[0].value * 3600 +
+        countdownDuration[1].value * 60 +
+        countdownDuration[2].value} isCounting={!overlayVisible} />
+      <Text style={[styles.circleText, { fontSize: 20, marginTop: 10 }]}>
         {goalPushups - count + " Pushups Left"}
       </Text>
       <View style={styles.addContainer}>
@@ -343,13 +343,13 @@ function DetailsScreen({ navigation }) {
             Get Ready!
           </Text>
         ) : (
-          <Ionicons
-            name="ios-timer"
-            size={32}
-            color="#38ef7d"
-            style={{ marginTop: 16 }}
-          />
-        )}
+            <Ionicons
+              name="ios-timer"
+              size={32}
+              color="#38ef7d"
+              style={{ marginTop: 16 }}
+            />
+          )}
         <Text
           style={{
             fontFamily: "HelveticaNeue-Light",
@@ -469,25 +469,72 @@ function DetailsScreen({ navigation }) {
 const keyExtractor = (item, index) => index.toString();
 
 function ModalScreen({ navigation }) {
+  const [data, setData] = useState({});
+  const [_subscription, setSubscription] = React.useState(null);
+  const [pullups, setPullups] = React.useState(0);
+
+  React.useEffect(() => {
+    _toggle();
+  }, []);
+
+  React.useEffect(() => {
+    return () => {
+      _unsubscribe();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (Math.abs(data.z) < 0.2) {
+      setPullups(pullups + 1);
+    }
+  }, [data])
+
+  const _toggle = () => {
+    if (_subscription) {
+      _unsubscribe();
+    } else {
+      _subscribe();
+    }
+  };
+
+  const _subscribe = () => {
+    setSubscription(Accelerometer.addListener(accelerometerData => {
+      setData(accelerometerData);
+      Accelerometer.setUpdateInterval(100);
+    }));
+  };
+
+  const _unsubscribe = () => {
+    _subscription && _subscription.remove();
+    setSubscription(null);
+  };
+
+  let { x, y, z } = data;
+
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 70,
-      }}
-    >
-      <CheckBox
-        title="Voiced Progress Updates"
-        checked={speechChecked}
-        onPress={() => {
-          speechChecked = !speechChecked;
-        }}
-      />
+    <View >
+      <Text >Accelerometer: (in Gs where 1 G = 9.81 m s^-2)</Text>
+      <Text >
+        x: {round(x)} y: {round(y)} z: {round(z)}
+      </Text>
+      <View >
+        <TouchableOpacity onPress={_toggle} style={{ height: 300, width: 500 }}>
+          <Text style={{ fontSize: 40 }}>Toggle</Text>
+          <Text>{pullups}</Text>
+        </TouchableOpacity>
+      </View>
       <Button onPress={() => navigation.goBack()} title="Dismiss" />
     </View>
   );
+}
+
+
+function round(n) {
+  if (!n) {
+    return 0;
+  }
+
+  return Math.floor(n * 100) / 100;
 }
 
 const MainStack = createStackNavigator();
@@ -522,7 +569,7 @@ const styles = StyleSheet.create({
   addContainer: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    marginTop: 40,
+    marginTop: 20,
   },
   circleText: {
     color: "white",
